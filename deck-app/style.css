@@ -1,0 +1,16 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+#deckContainer {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.card-img {
+    width: 150px;
+    margin: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
