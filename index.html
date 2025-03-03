@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>デッキローダー</title>
+    <title>デッキ管理</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>デッキコードを入力してください</h1>
-    <input type="text" id="deckCode" placeholder="例: 1JB20">
-    <button id="fetchDeck">デッキ取得</button>
-    <p id="status"></p> <!-- 読み込み状態を表示 -->
-    <div id="imageContainer"></div> <!-- 画像表示用 -->
+    <h1>デッキ管理システム</h1>
+    
+    <input type="file" id="fileInput" multiple accept="image/*">
+    <div id="deckContainer"></div>
+
+    <button id="saveDeck">デッキを保存</button>
+    <button id="loadDeck">デッキを読み込む</button>
 
     <script src="script.js"></script>
 </body>
