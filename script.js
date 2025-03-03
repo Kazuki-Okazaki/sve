@@ -1,39 +1,40 @@
-// デッキコードからデッキデータを取得する関数（仮のデータを使用）
-async function getDeckData(deckCode) {
-    // 仮のデータ（本来はサーバーから取得）
-    const mockData = {
-        "1JB20": [
-            { "img": "https://example.com/images/card1.png", "name": "カードA" },
-            { "img": "https://example.com/images/card2.png", "name": "カードB" },
-            { "img": "https://example.com/images/card3.png", "name": "カードC" }
-        ]
-    };
+async function fetchDeckData(deckCode) {
+    const apiUrl = `https://decklog.bushiroad.com/system/app/api/view/${deckCode}`;
 
-    return mockData[deckCode] || [];
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error(`HTTPエラー: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(data); // 取得したデータを確認
+        displayDeck(data);
+    } catch (error) {
+        console.error("データ取得エラー:", error);
+    }
 }
 
-// デッキを読み込んで表示する関数
-async function loadDeck() {
-    const deckCode = document.getElementById("deckCode").value.trim();
-    if (!deckCode) {
-        alert("デッキコードを入力してください");
-        return;
-    }
+function displayDeck(deckData) {
+    const container = document.getElementById("deck-container");
+    container.innerHTML = ""; // 以前の内容をクリア
 
-    const deckData = await getDeckData(deckCode);
-    const container = document.getElementById("deckContainer");
-    container.innerHTML = "";
+    // カードリストを取得（データ構造によって適宜変更）
+    const cardList = deckData.c_list || [];
 
-    if (deckData.length === 0) {
-        container.innerHTML = "<p>デッキが見つかりません。</p>";
-        return;
-    }
-
-    deckData.forEach(card => {
-        const imgElement = document.createElement("img");
-        imgElement.src = card.img;
-        imgElement.alt = card.name;
-        imgElement.className = "card-img";
-        container.appendChild(imgElement);
+    cardList.forEach(card => {
+        const cardImg = document.createElement("img");
+        cardImg.src = `https://decklog.bushiroad.com/image/${card.img}`; // 画像URL（適宜変更）
+        cardImg.alt = card.name;
+        cardImg.style.width = "150px"; // 画像サイズ調整
+        container.appendChild(cardImg);
     });
 }
+
+// デッキコードの入力と取得処理
+document.getElementById("fetch-button").addEventListener("click", () => {
+    const deckCode = document.getElementById("deck-code").value.trim();
+    if (deckCode) {
+        fetchDeckData(deckCode);
+    }
+});
