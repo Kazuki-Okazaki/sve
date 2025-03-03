@@ -1,15 +1,31 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const fileInput = document.getElementById("fileInput");
+    const dropArea = document.getElementById("dropArea");
     const deckContainer = document.getElementById("deckContainer");
     const saveButton = document.getElementById("saveDeck");
     const loadButton = document.getElementById("loadDeck");
 
     let deck = [];
 
-    // 画像アップロード時の処理
-    fileInput.addEventListener("change", (event) => {
-        const files = event.target.files;
+    // ドラッグ&ドロップのイベントリスナー
+    dropArea.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        dropArea.classList.add("highlight");
+    });
+
+    dropArea.addEventListener("dragleave", () => {
+        dropArea.classList.remove("highlight");
+    });
+
+    dropArea.addEventListener("drop", (event) => {
+        event.preventDefault();
+        dropArea.classList.remove("highlight");
+        handleFiles(event.dataTransfer.files);
+    });
+
+    function handleFiles(files) {
         for (const file of files) {
+            if (!file.type.startsWith("image/")) continue;
+
             const reader = new FileReader();
             reader.onload = (e) => {
                 const img = document.createElement("img");
@@ -36,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
             };
             reader.readAsDataURL(file);
         }
-    });
+    }
 
     // デッキをローカルストレージに保存
     saveButton.addEventListener("click", () => {
