@@ -58,3 +58,18 @@ body {
 .delete-button:hover {
     background-color: darkred;
 }
+
+.drop-area {
+    border: 2px dashed #007bff;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    background-color: #f8f9fa;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.drop-area.highlight {
+    background-color: #cce5ff;
+    border-color: #0056b3;
+}
+
