@@ -60,16 +60,11 @@ body {
 }
 
 .drop-area {
-    border: 2px dashed #007bff;
+    border: 2px dashed #007bff;  /* 常に青色の破線枠を表示 */
     border-radius: 10px;
     padding: 20px;
     text-align: center;
-    background-color: #f8f9fa;
-    transition: background-color 0.3s, border-color 0.3s;
+    background-color: #f8f9fa; /* 薄いグレー背景 */
 }
 
-.drop-area.highlight {
-    background-color: #cce5ff;
-    border-color: #0056b3;
-}
 
