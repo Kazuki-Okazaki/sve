@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const saveButton = document.getElementById("saveDeck");
     const loadButton = document.getElementById("loadDeck");
+    const clearButton = document.getElementById("clearDecks");
     const deckSelect = document.getElementById("deckSelect");
 
     let deck = {
@@ -128,6 +129,14 @@ document.addEventListener("DOMContentLoaded", () => {
             updateDeckDisplay();
         } else {
             alert("選択したデッキが見つかりません！");
+        }
+    });
+
+    clearButton.addEventListener("click", () => {
+        if (confirm("本当に全てのデッキを削除しますか？")) {
+            localStorage.clear();
+            updateDeckList();
+            alert("全デッキを削除しました！");
         }
     });
 
