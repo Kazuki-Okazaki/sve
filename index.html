@@ -4,13 +4,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>デッキ画像表示</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #deck-container { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+        .card { margin: 10px; text-align: center; }
+        .card img { width: 150px; height: auto; }
+        #loading { display: none; font-size: 18px; }
+    </style>
 </head>
 <body>
-    <h1>デッキコードを入力</h1>
-    <input type="text" id="deckCode" placeholder="例: 1JB20">
-    <button onclick="loadDeck()">デッキ読み込み</button>
-    <div id="deckContainer"></div>
-    <script src="script.js"></script>
+
+    <h1>デッキコードでカード画像を表示</h1>
+    <input type="text" id="deckCode" placeholder="デッキコードを入力 (例: 1JB20)">
+    <button onclick="loadDeck()">デッキを読み込む</button>
+    <p id="loading">読み込み中...</p>
+    <div id="deck-container"></div>
+
+    <script>
+        async function loadDeck() {
+            const deckCode = document.getElementById('deckCode').value.trim();
+            if (!deckCode) {
+                alert("デッキコードを入力してください。");
+                return;
+            }
+
+            const deckContainer = document.getElementById('deck-container');
+            deckContainer.innerHTML = "";
+            document.getElementById('loading').style.display = 'block';
+
+            try {
+                // デッキデータの取得（仮のAPIエンドポイント）
+                const response = await fetch(`https://example.com/api/getDeck?code=${deckCode}`);
+                if (!response.ok) throw new Error("デッキデータの取得に失敗しました");
+
+                const deckData = await response.json();
+                document.getElementById('loading').style.display = 'none';
+
+                if (!deckData.cards || deckData.cards.length === 0) {
+                    alert("カードデータが見つかりませんでした。");
+                    return;
+                }
+
+                // デッキ内のカードを表示
+                deckData.cards.forEach(card => {
+                    const cardElement = document.createElement("div");
+                    cardElement.classList.add("card");
+
+                    const img = document.createElement("img");
+                    img.src = `https://example.com/cards/${card.img}`;
+                    img.onerror = () => { img.src = "fallback.png"; }; // 画像が見つからない場合の代替画像
+
+                    const name = document.createElement("p");
+                    name.textContent = `${card.name} (${card.num}枚)`;
+
+                    cardElement.appendChild(img);
+                    cardElement.appendChild(name);
+                    deckContainer.appendChild(cardElement);
+                });
+
+            } catch (error) {
+                document.getElementById('loading').style.display = 'none';
+                alert("エラーが発生しました: " + error.message);
+            }
+        }
+    </script>
+
 </body>
 </html>
+
