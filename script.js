@@ -43,18 +43,17 @@ document.addEventListener("DOMContentLoaded", () => {
         for (const file of files) {
             if (!file.type.startsWith("image/")) continue;
 
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                if (type === "leader" && deck.leader.length >= 1) {
-                    alert("リーダーカードは1枚のみです！");
-                    return;
-                }
-                deck[type].push({ imgSrc: e.target.result, count: 1 });
-                updateDeckDisplay();
-            };
-            reader.readAsDataURL(file);
+            const imageUrl = URL.createObjectURL(file); // ローカルURLを作成
+
+            if (type === "leader" && deck.leader.length >= 1) {
+                alert("リーダーカードは1枚のみです！");
+                return;
+            }
+            deck[type].push({ imgSrc: imageUrl, count: 1 });
+            updateDeckDisplay();
         }
     }
+
 
     function updateDeckDisplay() {
         Object.keys(deckContainers).forEach(type => {
@@ -110,7 +109,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const deckName = prompt("デッキ名を入力してください:");
         if (deckName) {
-            localStorage.setItem(`deckData_${deckName}`, JSON.stringify(deck));
+            const deckToSave = deck[type].map(card => ({
+                imgSrc: card.imgSrc.split('/').pop(), // ファイル名のみを保存
+                count: card.count
+            }));
+
+            localStorage.setItem(`deckData_${deckName}`, JSON.stringify(deckToSave));
             updateDeckList();
             alert(`デッキ '${deckName}' を保存しました！`);
         }
@@ -125,12 +129,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const savedData = localStorage.getItem(`deckData_${selectedDeck}`);
         if (savedData) {
-            deck = JSON.parse(savedData);
+            const loadedDeck = JSON.parse(savedData);
+            deck = loadedDeck.map(card => ({
+                imgSrc: `./images/${card.imgSrc}`, // 画像フォルダのパスを付与
+                count: card.count
+            }));
+
             updateDeckDisplay();
         } else {
             alert("選択したデッキが見つかりません！");
         }
     });
+
 
     clearButton.addEventListener("click", () => {
         if (confirm("本当に全てのデッキを削除しますか？")) {
