@@ -54,7 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-
     function updateDeckDisplay() {
         Object.keys(deckContainers).forEach(type => {
             deckContainers[type].innerHTML = "";
@@ -109,12 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const deckName = prompt("デッキ名を入力してください:");
         if (deckName) {
-            const deckToSave = deck[type].map(card => ({
-                imgSrc: card.imgSrc.split('/').pop(), // ファイル名のみを保存
-                count: card.count
-            }));
-
-            localStorage.setItem(`deckData_${deckName}`, JSON.stringify(deckToSave));
+            localStorage.setItem(`deckData_${deckName}`, JSON.stringify(deck));
             updateDeckList();
             alert(`デッキ '${deckName}' を保存しました！`);
         }
@@ -140,7 +134,6 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("選択したデッキが見つかりません！");
         }
     });
-
 
     clearButton.addEventListener("click", () => {
         if (confirm("本当に全てのデッキを削除しますか？")) {
