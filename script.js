@@ -123,12 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const savedData = localStorage.getItem(`deckData_${selectedDeck}`);
         if (savedData) {
-            const loadedDeck = JSON.parse(savedData);
-            deck = loadedDeck.map(card => ({
-                imgSrc: `./images/${card.imgSrc}`, // 画像フォルダのパスを付与
-                count: card.count
-            }));
-
+            deck = JSON.parse(savedData);
             updateDeckDisplay();
         } else {
             alert("選択したデッキが見つかりません！");
